@@ -79,8 +79,10 @@ spec:
             {{- toYaml (omit .Values.cvat.kvrocks.livenessProbe "enabled") | nindent 12 }}
           {{- end }}
           volumeMounts:
+          {{- if .Values.cvat.kvrocks.defaultStorage.enabled }}
           - name: {{ .Release.Name }}-kvrocks-data
             mountPath: /var/lib/kvrocks/db
+          {{- end }}
           {{- with .Values.cvat.kvrocks.additionalVolumeMounts }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
