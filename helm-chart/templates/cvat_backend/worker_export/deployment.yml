@@ -64,6 +64,7 @@ spec:
           {{- $probeConfig := dict "args" $probeArgs "livenessProbe" $.Values.cvat.backend.worker.livenessProbe -}}
           {{ include "cvat.backend.worker.livenessProbe" $probeConfig | indent 10 }}
           volumeMounts:
+          {{- if .Values.cvat.backend.defaultStorage.enabled }}
           - mountPath: /home/django/data
             name: cvat-backend-data
             subPath: data
@@ -73,6 +74,7 @@ spec:
           - mountPath: /home/django/logs
             name: cvat-backend-data
             subPath: logs
+          {{- end }}
           - mountPath: /home/django/tmp_storage
             name: cvat-backend-data
             subPath: tmp_storage
