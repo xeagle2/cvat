@@ -17,29 +17,56 @@ export class ConverterMasksToRectangles extends BaseShapesAction {
     }
 
     public async run(input: ShapesActionInput): Promise<ShapesActionOutput> {
-        console.log('run', input);
+        // console.log('run', input);
 
         const maskShapes = input.collection.shapes
             .filter((shape) => shape.type === ShapeType.MASK);
 
-        input.collection.shapes
+        // input.collection.shapes
+        //     .filter((shape) => shape.type === ShapeType.MASK)
+        //     .forEach((shape) => {
+        //         let points = shape.points.slice(-4);
+        //         points = [
+        //             points[0], points[1],
+        //             points[2], points[3],
+        //         ];
+        //
+        //         console.log('old points', shape.points);
+        //         shape.points = points;
+        //         shape.type = ShapeType.RECTANGLE;
+        //
+        //         console.log('new points', shape.points);
+        //     });
+
+        const newShapes = input.collection.shapes
             .filter((shape) => shape.type === ShapeType.MASK)
-            .forEach((shape) => {
+            .map((shape) => {
                 let points = shape.points.slice(-4);
                 points = [
                     points[0], points[1],
                     points[2], points[3],
                 ];
 
-                console.log('old points', shape.points);
-                shape.points = points;
-                shape.type = ShapeType.RECTANGLE;
+                // console.log('old points', shape.points);
 
-                console.log('new points', shape.points);
+                const newShape = { ...shape };
+                newShape.id = null;
+                newShape.points = points;
+                newShape.type = ShapeType.RECTANGLE;
+
+                // console.log('new points', newShape.points);
+
+                return newShape;
             });
 
+        // input.collection.shapes.push(newShapes);
+
+        // console.log('to_create', newShapes);
+        // console.log('to_remove', maskShapes);
+
         return {
-            created: input.collection,
+            // created: input.collection,
+            created: { shapes: newShapes },
             deleted: { shapes: maskShapes },
         };
     }
